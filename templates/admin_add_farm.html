@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-gradient">➕ Add New Farm</h2>
+    <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+      ⬅ Back to Admin Dashboard
+    </a>
+  </div>
+
+  <!-- Add Farm Form -->
+  <div class="card shadow-lg p-4">
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label">Farm Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" name="location" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Animal Count</label>
+        <input type="number" name="animal_count" class="form-control" min="0">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Assign to Farmer</label>
+        <select name="farmer_id" class="form-select" required>
+          <option value="">-- Select Farmer --</option>
+          {% for farmer in farmers %}
+          <option value="{{ farmer.id }}">{{ farmer.name }} ({{ farmer.email }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Farm</button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

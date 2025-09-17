@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Digital Farm Management Portal{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Tailwind (optional, if you want hybrid design) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body class="bg-light">
+    <!-- 🌱 Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+      <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold text-success" href="{{ url_for('index') }}">
+          🌾 Farm Management Portal
+        </a>
+
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <!-- Always show Home -->
+            <li class="nav-item">
+              <a class="nav-link fw-semibold {% if request.endpoint=='index' %}text-success{% endif %}" href="{{ url_for('index') }}">
+                <i class="bi bi-house-door"></i> Home
+              </a>
+            </li>
+
+            {% if current_user.is_authenticated %}
+              <!-- Dashboard -->
+              <li class="nav-item">
+                <a class="nav-link fw-semibold {% if request.endpoint=='dashboard' %}text-success{% endif %}" href="{{ url_for('dashboard') }}">
+                  <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+              </li>
+
+              <!-- Logout -->
+              <li class="nav-item">
+                <a class="btn btn-danger btn-sm ms-3 px-3" href="{{ url_for('logout') }}">
+                  <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+              </li>
+            {% else %}
+             <!-- Login -->
+<li class="nav-item">
+  <a href="{{ url_for('login') }}" class="ml-3 px-3 py-1 rounded bg-white text-green-600 font-semibold hover:bg-green-100 flex items-center">
+    <i class="bi bi-box-arrow-in-right mr-1"></i> Login
+  </a>
+</li>
+
+<!-- Register -->
+<li class="nav-item">
+  <a href="{{ url_for('register') }}" class="ml-2 px-3 py-1 rounded bg-green-600 text-white font-semibold hover:bg-green-700 flex items-center">
+    <i class="bi bi-person-plus mr-1"></i> Register
+  </a>
+</li>
+
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+              {{ msg }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- Page Content -->
+    <div class="container py-4">
+      {% block content %}
+      <!-- Hero Section -->
+      <section class="relative bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white pt-24">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between py-16 px-6">
+          <div class="md:w-1/2 text-center md:text-left">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight">SIH Biosecurity</h1>
+            <p class="mt-4 text-lg md:text-xl">
+              A digital platform for empowering farmers with 
+              <span class="font-semibold">biosecurity tools, farm assessments, and livestock management</span>.
+            </p>
+            <div class="mt-6">
+              <a href="{{ url_for('register') }}" class="btn btn-light btn-lg shadow-lg transform transition hover:scale-105">🚜 Get Started</a>
+            </div>
+          </div>
+          <div class="md:w-1/2 mt-8 md:mt-0">
+            <img src="{{ url_for('static', filename='cow.jpg') }}" alt="Livestock" class="rounded-2xl shadow-xl border-4 border-white">
+          </div>
+        </div>
+      </section>
+      {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

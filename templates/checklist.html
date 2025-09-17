@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh;">
+
+  <!-- Checklist Submission Card -->
+  <div class="card shadow-lg mb-4 p-4" 
+       style="border-radius: 15px; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+    <h3 class="mb-3">{{ farm.name }} - Checklist</h3>
+
+    {% if current_user.role == 'farmer' %}
+      <form method="POST">
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="hygiene" id="hygiene">
+          <label class="form-check-label" for="hygiene">Hygiene Measures</label>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="feed" id="feed">
+          <label class="form-check-label" for="feed">Feed Quality</label>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="visitor" id="visitor">
+          <label class="form-check-label" for="visitor">Visitor Control</label>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Submit Checklist</button>
+      </form>
+    {% else %}
+      <p class="text-muted">You cannot submit checklists. Viewing only.</p>
+    {% endif %}
+  </div>
+
+  <!-- Past Checklists -->
+  <h5>Past Checklists</h5>
+  {% if farm.checklists %}
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      {% for c in farm.checklists %}
+      <div class="col">
+        <div class="card shadow-sm p-3 fade-in-up" 
+             style="border-left: 5px solid {{ '#4caf50' if c.compliance >= 80 else '#ffa500' if c.compliance >= 50 else '#ff4d4d' }};">
+          <div>
+            <h5>Checklist on {{ c.created_at.strftime('%Y-%m-%d') if c.created_at else "Unknown Date" }}</h5>
+            
+            <p>Hygiene: {{ '✔️' if c.hygiene else '❌' }}</p>
+            <p>Feed Quality: {{ '✔️' if c.feed_quality else '❌' }}</p>
+            <p>Visitor Control: {{ '✔️' if c.visitor_control else '❌' }}</p>
+            <p>Compliance: {{ c.compliance }}%</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No checklists yet.</p>
+  {% endif %}
+</div>
+
+<!-- Animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+  .card { animation: fadeIn 0.8s ease-in-out; }
+  .fade-in-up { animation: fadeInUp 0.5s ease-in-out; }
+</style>
+{% endblock %}

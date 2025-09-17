@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh;">
+  <h3 class="mb-4 text-center">Training Modules</h3>
+
+  {% if modules %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for m in modules %}
+        <div class="col">
+          <a href="{{ m.url }}" target="_blank" class="text-decoration-none">
+            <div class="card shadow-lg h-100 p-3" style="border-radius: 15px; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); transition: transform 0.3s, box-shadow 0.3s;">
+              <h5 class="card-title">{{ m.title }}</h5>
+              <p class="card-text">{{ m.description }}</p>
+              <div class="mt-auto text-end">
+                <span class="btn btn-sm btn-light">Open</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">No training modules available at the moment.</p>
+  {% endif %}
+</div>
+
+<style>
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  }
+</style>
+{% endblock %}

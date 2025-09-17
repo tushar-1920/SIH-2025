@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-600 to-green-500 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-lg w-full space-y-8">
+    <div class="text-center">
+      <h2 class="mt-6 text-3xl font-extrabold text-white">Add New Farm</h2>
+      <p class="mt-2 text-sm text-green-100">
+        Register a new farm and assign a farmer and optional vet.
+      </p>
+    </div>
+    
+    <div class="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+      <form method="POST" class="space-y-4">
+        <!-- Farm Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Farm Name</label>
+          <input id="name" name="name" type="text" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 transition duration-300">
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+          <input id="location" name="location" type="text" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 transition duration-300">
+        </div>
+
+        <!-- Animal Count -->
+        <div>
+          <label for="animal_count" class="block text-sm font-medium text-gray-700">Animal Count</label>
+          <input id="animal_count" name="animal_count" type="number" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 transition duration-300">
+        </div>
+
+        <!-- Assign Farmer -->
+        <div>
+          <label for="farmer_id" class="block text-sm font-medium text-gray-700">Assign Farmer</label>
+          <select id="farmer_id" name="farmer_id" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 transition duration-300">
+            {% for farmer in farmers %}
+              <option value="{{ farmer.id }}">{{ farmer.name }} ({{ farmer.email }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Assign Vet -->
+        <div>
+          <label for="vet_id" class="block text-sm font-medium text-gray-700">Assign Vet (optional)</label>
+          <select id="vet_id" name="vet_id"
+            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 transition duration-300">
+            <option value="">None</option>
+            {% for vet in vets %}
+              <option value="{{ vet.id }}">{{ vet.name }} ({{ vet.email }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-white font-semibold bg-gradient-to-r from-green-700 to-green-500 hover:from-green-800 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 transform hover:scale-105 transition duration-300">
+            Create Farm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

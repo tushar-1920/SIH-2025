@@ -1,0 +1,59 @@
+<!-- templates/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+  <h2 class="mb-4">Admin Dashboard</h2>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Add Farm Button -->
+  <div class="mb-4">
+    <a href="{{ url_for('admin_add_farm') }}" class="btn btn-success">
+      ➕ Add Farm
+    </a>
+  </div>
+
+  <!-- Farm List -->
+  <h4>All Farms</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Farm Name</th>
+        <th>Location</th>
+        <th>Animals</th>
+        <th>Farmer</th>
+        <th>Vet</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for farm in farms %}
+      <tr>
+        <td>{{ farm.id }}</td>
+        <td>{{ farm.name }}</td>
+        <td>{{ farm.location }}</td>
+        <td>{{ farm.animal_count }}</td>
+        <td>{{ farm.farmer.name if farm.farmer else 'Unassigned' }}</td>
+        <td>{{ farm.vet.name if farm.vet else 'Unassigned' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

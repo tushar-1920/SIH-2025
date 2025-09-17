@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block page_title %}
+  <h2 class="text-success">🌾 Farm Details</h2>
+{% endblock %}
+{% block content %}
+<div class="container py-5" style="min-height: 85vh;">
+
+  <!-- Farm Info Card -->
+  <div class="card shadow-lg p-4 mb-4" style="border-radius: 12px;">
+    <h3 class="mb-2 text-success">{{ farm.name }}</h3>
+    <p class="mb-1"><strong>📍 Location:</strong> {{ farm.location }}</p>
+    <p><strong>🐄 Animals:</strong> {{ farm.animal_count if farm.animal_count is defined else 'N/A' }}</p>
+  </div>
+
+  <!-- Risk Assessments Section -->
+  <div class="card shadow p-4 mb-4" style="border-radius: 12px; background: #f9fff9;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="text-success">🛡️ Risk Assessments</h4>
+      {% if current_user.role == 'vet' and farm.vet_id == current_user.id %}
+        <a href="{{ url_for('risk_assessment', farm_id=farm.id) }}" 
+           class="btn btn-sm btn-success shadow-sm">
+          ➕ New Assessment
+        </a>
+      {% endif %}
+    </div>
+    {% if risk_reports is defined and risk_reports|length > 0 %}
+      <div class="list-group">
+        {% for report in risk_reports %}
+          <div class="list-group-item list-group-item-action mb-2 rounded shadow-sm">
+            <small class="text-muted">
+              📅 {{ report.created_at.strftime('%Y-%m-%d %H:%M') if report.created_at else '' }}  
+              | 👤 {% if report.user and report.user.name %} 
+                   {{ report.user.name }} ({{ report.user.role|capitalize }}) 
+                 {% else %}
+                   Unknown
+                 {% endif %}
+            </small>
+            <div class="mt-1">
+              <span class="badge bg-success">Level: {{ report.level }}</span>
+              <span class="badge bg-secondary">Score: {{ report.score }}</span>
+            </div>
+            <p class="mt-2 mb-0"><strong>📝 Notes:</strong> {{ report.notes or "No notes" }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted fst-italic">No risk assessments submitted yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Checklists Section -->
+  <div class="card shadow p-4" style="border-radius: 12px; background: #f9fff9;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="text-success">📋 Checklists</h4>
+      {% if (current_user.role == 'farmer' and farm.farmer_id == current_user.id) 
+            or (current_user.role == 'vet' and farm.vet_id == current_user.id) %}
+        <a href="{{ url_for('checklist', farm_id=farm.id) }}" 
+           class="btn btn-sm btn-success shadow-sm">
+          ➕ New Checklist
+        </a>
+      {% endif %}
+    </div>
+    {% if checklists is defined and checklists|length > 0 %}
+      <div class="list-group">
+        {% for checklist in checklists %}
+          <div class="list-group-item list-group-item-action mb-2 rounded shadow-sm">
+            <small class="text-muted">
+              📅 {{ checklist.created_at.strftime('%Y-%m-%d %H:%M') if checklist.created_at else '' }}  
+              | 👤 {% if checklist.user and checklist.user.name %} 
+                   {{ checklist.user.name }} ({{ checklist.user.role|capitalize }}) 
+                 {% else %}
+                   Unknown
+                 {% endif %}
+            </small>
+            <div class="mt-2">
+              ✅ Hygiene: <span class="badge {{ 'bg-success' if checklist.hygiene else 'bg-danger' }}">
+                {{ 'Yes' if checklist.hygiene else 'No' }}
+              </span>  
+              🍽️ Feed Quality: <span class="badge {{ 'bg-success' if checklist.feed_quality else 'bg-danger' }}">
+                {{ 'Yes' if checklist.feed_quality else 'No' }}
+              </span>  
+              🚪 Visitor Control: <span class="badge {{ 'bg-success' if checklist.visitor_control else 'bg-danger' }}">
+                {{ 'Yes' if checklist.visitor_control else 'No' }}
+              </span>
+            </div>
+            <p class="mt-2 mb-0">📊 Compliance: 
+              <strong class="text-success">{{ checklist.compliance }}%</strong>
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted fst-italic">No checklists submitted yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

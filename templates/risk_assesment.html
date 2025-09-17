@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh;">
+
+  <!-- Risk Assessment Card -->
+  <div class="card shadow-lg p-4 mb-4" 
+       style="border-radius: 15px; background: linear-gradient(135deg, #e6f7e6 0%, #c8f5c8 100%); animation: fadeIn 0.8s ease-in-out;">
+    <h3 class="mb-3 text-success">Risk Assessment — {{ farm.name }}</h3>
+
+    {% if current_user.role == 'farmer' %}
+      <form method="post">
+        <div class="mb-3">
+          <label>Hygiene & Biosecurity Measures (1=poor, 5=excellent)</label>
+          <input type="number" name="q1" min="1" max="5" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Recent Animal Health Incidents (1=many, 5=none)</label>
+          <input type="number" name="q2" min="1" max="5" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Visitor / Vehicle Controls (1=none, 5=strict)</label>
+          <input type="number" name="q3" min="1" max="5" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Notes</label>
+          <textarea name="notes" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success mt-2">Save Assessment</button>
+      </form>
+    {% else %}
+      <p class="text-muted">You cannot submit risk assessments. Viewing only.</p>
+    {% endif %}
+  </div>
+
+  <!-- Previous Assessments -->
+  <h5 class="mt-4">Previous Assessments</h5>
+  {% if farm.risk_assessments %}
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      {% for a in farm.risk_assessments %}
+        <div class="col">
+          <div class="card shadow-sm p-3" style="border-left: 6px solid 
+            {% if a.level == 'Low' %}#28a745
+            {% elif a.level == 'Medium' %}#ffc107
+            {% else %}#dc3545{% endif %}; animation: fadeInUp 0.6s ease-in-out;">
+            <div><strong>Date:</strong> {{ a.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            <div><strong>Score:</strong> {{ a.score }}</div>
+            <div><strong>Risk Level:</strong> 
+              <span class="badge 
+                {% if a.level == 'Low' %}bg-success
+                {% elif a.level == 'Medium' %}bg-warning text-dark
+                {% else %}bg-danger{% endif %}">
+                {{ a.level }}
+              </span>
+            </div>
+            {% if a.notes %}
+              <div class="mt-1"><strong>Notes:</strong> {{ a.notes }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No assessments yet.</p>
+  {% endif %}
+</div>
+
+<!-- Animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+  .card { animation: fadeIn 0.8s ease-in-out; }
+</style>
+{% endblock %}

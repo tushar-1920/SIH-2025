@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh;">
+
+  <!-- Risk Assessment Card -->
+  <div class="card shadow-lg p-4 mb-4" 
+       style="border-radius: 12px; background: linear-gradient(135deg, #f0fff4 0%, #e6f7e6 100%); animation: fadeIn 0.8s ease-in-out;">
+    <h3 class="mb-4 text-success">Risk Assessment — {{ farm.name }}</h3>
+
+    <form method="post">
+      <!-- Q1 -->
+      <div class="mb-3">
+        <label class="form-label">Hygiene & Biosecurity Measures (1=poor, 5=excellent)</label>
+        <input type="number" name="q1" min="1" max="5" class="form-control" required>
+      </div>
+
+      <!-- Q2 -->
+      <div class="mb-3">
+        <label class="form-label">Recent Animal Health Incidents (1=many, 5=none)</label>
+        <input type="number" name="q2" min="1" max="5" class="form-control" required>
+      </div>
+
+      <!-- Q3 -->
+      <div class="mb-3">
+        <label class="form-label">Visitor / Vehicle Controls (1=none, 5=strict)</label>
+        <input type="number" name="q3" min="1" max="5" class="form-control" required>
+      </div>
+
+      <!-- Notes -->
+      <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <textarea name="notes" rows="3" class="form-control"></textarea>
+      </div>
+
+      <!-- Button -->
+      <button class="btn btn-success w-100 py-2">💾 Save Assessment</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+  .card { animation: fadeIn 0.8s ease-in-out; }
+</style>
+{% endblock %}
